@@ -17,7 +17,7 @@ There is also a `build-arm.sh` script if you want to run the exporter on an ARMv
 ```
 $ hello-exporter --help
 Usage of hello-exporter:
-  -a, --addr string       Address to listen on. (default ":8080")
+  -a, --addr string       Address to listen on. (default ":9258")
   -p, --password string   Password of Hello account.
   -u, --username string   Username of Hello account.
 ```
@@ -31,7 +31,5 @@ scrape_configs:
   - job_name: 'hello'
     scrape_interval: 90s
     static_configs:
-      - targets: ['localhost:8080']
+      - targets: ['localhost:9258']
 ```
-
-**Note:** The exporter currently uses port 8080 as a default as it does not have an "assigned exporter port" yet. Look at the [prometheus Wiki](https://github.com/prometheus/prometheus/wiki/Default-port-allocations) for any updates.

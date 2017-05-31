@@ -18,7 +18,7 @@ type config struct {
 
 func parseConfig() (config, error) {
 	cfg := config{}
-	pflag.StringVarP(&cfg.Addr, "addr", "a", ":8080", "Address to listen on.")
+	pflag.StringVarP(&cfg.Addr, "addr", "a", ":9258", "Address to listen on.")
 	pflag.StringVarP(&cfg.Username, "username", "u", "", "Username of Hello account.")
 	pflag.StringVarP(&cfg.Password, "password", "p", "", "Password of Hello account.")
 	pflag.Parse()
