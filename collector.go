@@ -39,6 +39,7 @@ var (
 type helloCollector struct {
 	client *api.HelloClient
 	up     prometheus.Gauge
+	time   prometheus.Histogram
 	errors *prometheus.CounterVec
 }
 
@@ -49,6 +50,10 @@ func newCollector(client *api.HelloClient) *helloCollector {
 			Name: metricsPrefix + "up",
 			Help: "Zero if there was an error during scrape process.",
 		}),
+		time: prometheus.NewHistogram(prometheus.HistogramOpts{
+			Name: metricsPrefix + "scrape_duration_seconds",
+			Help: "Contains the duration it took to scrape the Hello API.",
+		}),
 		errors: prometheus.NewCounterVec(prometheus.CounterOpts{
 			Name: metricsPrefix + "errors_total",
 			Help: "Counts the number of errors by type.",
@@ -58,12 +63,14 @@ func newCollector(client *api.HelloClient) *helloCollector {
 
 func (c *helloCollector) Describe(dChan chan<- *prometheus.Desc) {
 	c.up.Describe(dChan)
+	c.time.Describe(dChan)
 	c.errors.Describe(dChan)
 }
 
 type collectFunc func(chan<- prometheus.Metric) error
 
 func (c *helloCollector) Collect(mChan chan<- prometheus.Metric) {
+	start := time.Now()
 	up := true
 	for _, collectFunc := range []collectFunc{
 		c.collectDevices,
@@ -89,7 +96,10 @@ func (c *helloCollector) Collect(mChan chan<- prometheus.Metric) {
 		c.up.Set(0)
 	}
 
+	c.time.Observe(time.Since(start).Seconds())
+
 	c.up.Collect(mChan)
+	c.time.Collect(mChan)
 	c.errors.Collect(mChan)
 }
 
