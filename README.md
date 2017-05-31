@@ -33,3 +33,7 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9258']
 ```
+
+## Acknowledgements
+
+I did not do the reverse engineering of the API myself. Instead I read some nice blog articles about it and based my implementation on them. Although I have read other ones the one by [Chris Smith](https://www.chameth.com/2016/04/10/sense-api/) is the one I read while doing the implementation.
